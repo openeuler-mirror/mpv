@@ -1,6 +1,6 @@
 Name:           mpv
 Version:        0.32.0
-Release:        1
+Release:        2
 Summary:        Movie player playing most video formats and DVDs
 License:        GPLv2+ and LGPLv2+
 URL:            http://mpv.io/
@@ -12,6 +12,8 @@ Patch0:         %{name}-config.patch
 # Fix ppc as upstream refuse to fix the issue
 # https://github.com/mpv-player/mpv/issues/3776
 Patch1:         ppc_fix.patch
+# Fix pause conflicting
+Patch2:         mpv-rename-local-function-conflicting-with-pause.patch
 
 BuildRequires:  pkgconfig(alsa)
 BuildRequires:  desktop-file-utils
@@ -160,5 +162,8 @@ install -Dpm 644 README.md etc/input.conf etc/mpv.conf -t %{buildroot}%{_docdir}
 %{_libdir}/pkgconfig/mpv.pc
 
 %changelog
+* Tue Aug 10 2021 weidong <weidong@uniontech.com> - 0.32.0-2
+- rename local function conflicting with pause
+
 * Thu May 13 2021 He Rengui <herengui@uniontech.com> - 0.32.0-1
 - package init
