@@ -1,0 +1,52 @@
+From 3da08a1789cf2f6d622094ae2cf0c2eb876480f0 Mon Sep 17 00:00:00 2001
+From: weidong <weidong@uniontech.com>
+Date: Tue, 10 Aug 2021 17:26:07 +0800
+Subject: [PATCH] mpv: rename local function conflicting with pause
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+../audio/out/ao_pulse.c:556:13: error: conflicting types for â€˜pauseâ€™
+  556 | static void pause(struct ao *ao)
+      |             ^~~~~
+In file included from /usr/include/bits/sigstksz.h:24,
+                 from /usr/include/signal.h:328,
+                 from /usr/include/sys/param.h:28,
+                 from /usr/include/pulse/sample.h:26,
+                 from /usr/include/pulse/def.h:28,
+                 from /usr/include/pulse/direction.h:23,
+                 from /usr/include/pulse/pulseaudio.h:24,
+                 from ../audio/out/ao_pulse.c:29:
+/usr/include/unistd.h:489:12: note: previous declaration of â€˜pauseâ€™ was here
+  489 | extern int pause (void);
+
+Signed-off-by: weidong <weidong@uniontech.com>
+---
+ audio/out/ao_pulse.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/audio/out/ao_pulse.c b/audio/out/ao_pulse.c
+index 5b4ced6..51ce304 100644
+--- a/audio/out/ao_pulse.c
++++ b/audio/out/ao_pulse.c
+@@ -553,7 +553,7 @@ static void reset(struct ao *ao)
+ }
+ 
+ // Pause the audio stream by corking it on the server
+-static void pause(struct ao *ao)
++static void set_pause(struct ao *ao)
+ {
+     cork(ao, true);
+ }
+@@ -824,7 +824,7 @@ const struct ao_driver audio_out_pulse = {
+     .get_space = get_space,
+     .play      = play,
+     .get_delay = get_delay,
+-    .pause     = pause,
++    .pause     = set_pause,
+     .resume    = resume,
+     .drain     = drain,
+     .wait      = wait_audio,
+-- 
+2.20.1
+
